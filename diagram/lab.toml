@@ -1,0 +1,236 @@
+# Source data for homelab.svg. Edit this file, then run build.py.
+# Icons: a tile's icon is logos/<icon>.svg or .png (icon defaults to the tile id).
+# If no logo file exists, the tile shows a two-letter monogram.
+
+[meta]
+title = "Home Lab"
+verified = "2026-11-05"
+footer_right = "Logical view · container groups · data paths"
+
+# value "auto:hosts", "auto:containers" or "auto:networks" is counted from this file.
+[[stats]]
+value = "auto:hosts"
+label = "Servers"
+
+[[stats]]
+value = "auto:containers"
+label = "Containers"
+
+[[stats]]
+value = "auto:networks"
+label = "Networks"
+
+[[stats]]
+value = "19"
+label = "TB array"
+
+# Top row, left to right.
+# tag on a network is its VLAN ID, or "untagged" for the native LAN.
+[[edge]]
+eyebrow = "WAN"
+name = "Internet"
+icon = "isp"
+sub = "single WAN · DHCP"
+
+[[edge]]
+eyebrow = "Gateway"
+name = "Zeus"
+icon = "unifi"
+sub = "UniFi Cloud Gateway Max"
+
+[edge_group]
+eyebrow = "Switching + Wi-Fi"
+items = [
+  { name = "Office Switch", icon = "unifi", sub = "UniFi US-24-250W · PoE" },
+  { name = "3 × AC Pro", icon = "unifi", sub = "UniFi access points" },
+]
+
+[[networks]]
+tag = "untagged"
+name = "Management"
+subnet = "10.0.1.0/24"
+
+[[networks]]
+tag = "10"
+name = "Trusted"
+subnet = "10.0.10.0/24"
+
+[[networks]]
+tag = "20"
+name = "Services"
+subnet = "10.0.20.0/24"
+hosts = true
+
+[[networks]]
+tag = "30"
+name = "IoT"
+subnet = "10.0.30.0/24"
+
+[[networks]]
+tag = "40"
+name = "Guest"
+subnet = "10.0.40.0/24"
+
+# Cards. column "main" is the wide left card, "side" stacks on the right.
+# server = true counts toward the Servers stat.
+[[cards]]
+column = "main"
+server = true
+eyebrow = "Unraid · storage + media"
+name = "poseidon"
+addr = "10.0.20.10"
+spec = "Intel i7-4790K · 16 GB DDR3 · NVIDIA Quadro P2000"
+storage = [
+  ["Array", "2 × 10 TB data + 2 parity · xfs"],
+  ["Cache", "2 × 1 TB SSD · btrfs raid1"],
+]
+cols = 8
+
+  [[cards.groups]]
+  section = "Containers"
+  name = "Edge + security"
+  tiles = [
+    { id = "traefik", label = "Traefik", note = "reverse proxy" },
+    { id = "cloudflared", label = "cloudflared", note = "tunnel" },
+    { id = "crowdsec", label = "CrowdSec", note = "Traefik plugin" },
+    { id = "socket-proxy", label = "Socket proxy", note = "read-only API" },
+  ]
+
+  [[cards.groups]]
+  name = "DNS"
+  tiles = [
+    { id = "adguard", label = "AdGuard", note = "artemis" },
+    { id = "adguardhome-sync", label = "AGH Sync", icon = "adguard", note = "from apollo" },
+  ]
+
+  [[cards.groups]]
+  name = "Acquisition"
+  tiles = [
+    { id = "sonarr", label = "Sonarr" },
+    { id = "radarr", label = "Radarr" },
+    { id = "bazarr", label = "Bazarr" },
+    { id = "prowlarr", label = "Prowlarr" },
+    { id = "flaresolverr", label = "FlareSolverr" },
+    { id = "nzbget", label = "NZBGet" },
+    { id = "metube", label = "MeTube" },
+  ]
+
+  [[cards.groups]]
+  name = "Media"
+  tiles = [
+    { id = "jellyfin", label = "Jellyfin" },
+    { id = "tunarr", label = "Tunarr" },
+    { id = "seerr", label = "Seerr" },
+  ]
+
+  [[cards.groups]]
+  name = "Books + comics"
+  tiles = [
+    { id = "calibre-web", label = "Calibre-Web" },
+    { id = "shelfmark", label = "Shelfmark" },
+    { id = "komga", label = "Komga" },
+    { id = "pullbox", label = "Pullbox", note = "comics" },
+  ]
+
+  [[cards.groups]]
+  name = "Monitoring"
+  tiles = [
+    { id = "uptime-kuma", label = "Uptime Kuma", note = "heartbeats" },
+  ]
+
+  [[cards.groups]]
+  section = "Plugins"
+  tiles = [
+    { id = "appdata-backup", label = "Appdata Backup", icon = "unraid", note = "daily 03:00" },
+    { id = "nvidia-driver", label = "NVIDIA Driver", icon = "nvidia" },
+    { id = "user-scripts", label = "User Scripts", icon = "unraid" },
+  ]
+
+[[cards]]
+column = "side"
+server = true
+eyebrow = "Debian 13 · backup host"
+name = "kronos"
+addr = "10.0.20.15"
+spec = "ThinkCentre M93p · i5-4590T · 8 GB"
+storage = [
+  ["tank", "ZFS mirror · 2 × 1 TB SSD"],
+  ["Boot", "256 GB SATA SSD · ext4"],
+]
+cols = 5
+
+  [[cards.groups]]
+  tiles = [
+    { id = "zfs", label = "ZFS" },
+    { id = "sanoid", label = "sanoid", note = "snapshots" },
+    { id = "restic", label = "restic", note = "to B2" },
+  ]
+
+[[cards]]
+column = "side"
+server = true
+eyebrow = "Raspberry Pi · DNS"
+name = "apollo"
+addr = "10.0.20.5"
+spec = "Pi 4 Model B · 4 GB"
+cols = 5
+
+  [[cards.groups]]
+  tiles = [
+    { id = "adguard", label = "AdGuard", note = "primary" },
+    { id = "acme-sh", label = "acme.sh", note = "DNS-01" },
+  ]
+
+[[cards]]
+column = "side"
+eyebrow = "Off-prem"
+name = "Cloud"
+cols = 5
+stretch = true
+
+  [[cards.groups]]
+  name = "Cloudflare"
+  tiles = [
+    { id = "cloudflare", label = "DNS" },
+    { id = "cloudflare-tunnel", label = "Tunnel", icon = "cloudflare" },
+  ]
+
+  [[cards.groups]]
+  name = "Backblaze"
+  tiles = [
+    { id = "backblaze", label = "B2", note = "restic repo" },
+  ]
+
+# Bottom section. Each step is one chip. A list of strings is a set of chips side by side.
+[[flows]]
+name = "Remote access"
+steps = ["Internet", "Cloudflare edge", "Cloudflare Tunnel", "Traefik · poseidon", "App containers"]
+note = "no port forwards"
+
+[[flows]]
+name = "DNS"
+steps = ["Clients · every VLAN", "apollo + artemis", "Quad9 · Cloudflare"]
+note = "artemis synced from apollo every 15 min"
+
+[[flows]]
+name = "Backups"
+steps = ["poseidon · appdata + flash", "kronos · nightly pull", "ZFS + sanoid", "restic", "Backblaze B2"]
+
+[[flows]]
+name = "Alerts"
+steps = [["poseidon · Unraid + health checks", "kronos · backup job + ZFS events", "Uptime Kuma · backup heartbeat"], "Discord"]
+note = "tunnel health alerts go by email"
+
+# Times are local.
+[schedule]
+title = "Daily schedule · local time"
+events = [
+  { at = "02:30", label = "Traefik log rotation", host = "poseidon" },
+  { at = "03:00", label = "Appdata Backup", host = "poseidon" },
+  { at = "04:45", label = "AdGuard config pull", host = "kronos" },
+  { at = "05:00", label = "Pull + restic to B2", host = "kronos" },
+  { at = "07:07", label = "Snapshot + pool check", host = "kronos" },
+]
+every = 15
+every_label = "Every 15 min: sanoid snapshots, AdGuard sync"
+monthly = "Monthly: parity check 1st Sun 03:00 · ZFS scrub 2nd Sun 00:24"
